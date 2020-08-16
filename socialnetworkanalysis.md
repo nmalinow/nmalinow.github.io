@@ -53,6 +53,12 @@ The network also contains the node attributes Department and ManagementSalary.
 
 Department indicates the department in the company which the person belongs to, and ManagementSalary indicates whether that person is receiving a management position salary.
 
+Let's get a peak at the data.
+```
+G = nx.read_gpickle('email_prediction.txt')
+G.nodes(data=True)
+```
+
 ### Part 2A - Salary Prediction
 Using network G, identify the people in the network with missing values for the node attribute ManagementSalary and predict whether or not these individuals are receiving a management position salary.
 
