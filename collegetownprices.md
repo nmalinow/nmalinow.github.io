@@ -17,9 +17,9 @@ From the Zillow research data site there is housing data for the United States. 
 From the Wikipedia page on college towns is a list of university towns in the United States which has been copy and pasted into the file university_towns.txt.
 From Bureau of Economic Analysis, US Department of Commerce, the GDP over time of the United States in current dollars (use the chained value in 2009 dollars), in quarterly intervals, in the file gdplev.xls. For this assignment, only look at GDP data from the first quarter of 2000 onward.
 
-### Exploring the Data
+### Previewing the Data
 
-To get started, I uploaded the required libraries. The t-test for independence is used in this case.
+To get started, I uploaded the required libraries. The independent samples t-test is used in this case.
 ```
 import pandas as pd
 import numpy as np
@@ -32,7 +32,7 @@ df = pd.read_csv('university_towns.txt', header=none)
 df.head()
 ```
 
-Now, let's check out the US Department of Commerce data.
+Now, let's check out the US Department of Commerce GDP data.
 ```
 GDP = pd.read_excel('gdplev.xls', usecols=[4,6], skiprows=219, names = ['Quarter', 'GDP'])
 GDP['GDP'] = pd.to_numeric(GDP['GDP'])
@@ -40,7 +40,7 @@ GDP['GDP'] = pd.to_numeric(GDP['GDP'])
 GDP.head()
 ```
 
-Finally, let's look at our Zillow data.
+Finally, let's look at our Zillow housing data.
 ```
 zillow = pd.read_csv("City_Zhvi_AllHomes.csv")
 zillow.head()
@@ -49,7 +49,6 @@ zillow.head()
 # Cleaning the Data
 
 First, I had to map states to acronyms to merge the university towns with the zillow dataset. So, I used this dictionary.
-
 ```
 states = {'OH': 'Ohio', 'KY': 'Kentucky', 'AS': 'American Samoa', 'NV': 'Nevada', 'WY': 'Wyoming', 'NA': 'National', 'AL': 'Alabama', 'MD': 'Maryland', 'AK': 'Alaska', 'UT': 'Utah', 'OR': 'Oregon', 'MT': 'Montana', 'IL': 'Illinois', 'TN': 'Tennessee', 'DC': 'District of Columbia', 'VT': 'Vermont', 'ID': 'Idaho', 'AR': 'Arkansas', 'ME': 'Maine', 'WA': 'Washington', 'HI': 'Hawaii', 'WI': 'Wisconsin', 'MI': 'Michigan', 'IN': 'Indiana', 'NJ': 'New Jersey', 'AZ': 'Arizona', 'GU': 'Guam', 'MS': 'Mississippi', 'PR': 'Puerto Rico', 'NC': 'North Carolina', 'TX': 'Texas', 'SD': 'South Dakota', 'MP': 'Northern Mariana Islands', 'IA': 'Iowa', 'MO': 'Missouri', 'CT': 'Connecticut', 'WV': 'West Virginia', 'SC': 'South Carolina', 'LA': 'Louisiana', 'KS': 'Kansas', 'NY': 'New York', 'NE': 'Nebraska', 'OK': 'Oklahoma', 'FL': 'Florida', 'CA': 'California', 'CO': 'Colorado', 'PA': 'Pennsylvania', 'DE': 'Delaware', 'NM': 'New Mexico', 'RI': 'Rhode Island', 'MN': 'Minnesota', 'VI': 'Virgin Islands', 'NH': 'New Hampshire', 'MA': 'Massachusetts', 'GA': 'Georgia', 'ND': 'North Dakota', 'VA': 'Virginia'}
 ```
@@ -86,7 +85,7 @@ get_list_of_university_towns()
 
 ### Defining Quarters
 
-Using the US DoC GDP data, I returned the quarter values with year in an easily usable string format when I found the start of the recession.
+Using the GDP data and the definition of a quarter as described in the background, I returned the quarter values with year in an easily usable string format when I found the start of the recession.
 ```
 def get_recession_start():
 #    '''Returns the year and quarter of the recession start time as a 
@@ -105,6 +104,8 @@ def get_recession_start():
     return Quarter[0]
 get_recession_start()
 ```
+'2008q3'
+
 Next, I found the end of the recession.
 ```
 def get_recession_end():
@@ -117,6 +118,8 @@ def get_recession_end():
             return GDP.iloc[i+2][0]
 get_recession_end()
 ```
+'2009q4'
+
 Finally, I found the bottom of the recession.
 ```
 def get_recession_bottom():
@@ -131,18 +134,22 @@ def get_recession_bottom():
     recession.drop(['index'], axis=1, inplace=True)
     min_index = recession['GDP'].idxmin()
     return recession.iloc[min_index][0]
+    
 get_recession_bottom()
 ```
+'2009q2'
 
-To use the quarterly values I created when finding the recession start/bottom/end, I had to convert the housing data to quarters as defined at the beginning and take the mean of the 3 months in the quarter. I returned the data in a dataframe with a multi-index.
-
+To use the quarterly values I created when finding the recession start/bottom/end, I had to convert the housing data to quarters as defined at the beginning and take the mean of the 3 months in the quarter.
+```
 def convert_housing_data_to_quarters():
     
+    # Retrieved the housing data.
     df= pd.read_csv("City_Zhvi_AllHomes.csv")
     df['State'].replace(states, inplace= True)
     df= df.set_index(["State","RegionName"])
     df = df.iloc[:,49:250]
-    
+   
+    # Defined quarters and calculated the mean of each quarters' values.
     def quarters(col):
         if col.endswith(("01", "02", "03")):
             s = col[:4] + "q1"
@@ -158,44 +165,36 @@ def convert_housing_data_to_quarters():
     return housing
  
 convert_housing_data_to_quarters()
+```
 
-# Running the T-Test
+### Running the T-Test
 
-I merged the data in the 3 datasets, starting with the university_towns and 
+I created a column "University Town" in the table for identifying college towns since the towns in this table are college towns. Then I left-merged the housing data with the aforementioned towns table to only account for towns with housing data. I then identified the non-university towns by filling the newly merged towns "University Town" column with a value of false.
+```
 def run_ttest():
-#    '''First creates new data showing the decline or growth of housing prices
-#    between the recession start and the recession bottom. Then runs a ttest
-#    comparing the university town values to the non-university towns values, 
-#    return whether the alternative hypothesis (that the two groups are the same)
-#    is true or not as well as the p-value of the confidence. 
-    
-#    Return the tuple (different, p, better) where different=True if the t-test is
-#    True at a p<0.01 (we reject the null hypothesis), or different=False if 
-#    otherwise (we cannot reject the null hypothesis). The variable p should
-#    be equal to the exact p value returned from scipy.stats.ttest_ind(). The
-#    value for better should be either "university town" or "non-university town"
-#    depending on which has a lower mean price ratio (which is equivilent to a
-#    reduced market loss).'''
-#    from scipy.stats import ttest_ind
 
-    towns = get_list_of_university_towns()
-    #towns = towns.set_index(['State','Region Name'])
-    towns['University Town'] = True
+    # Retrieved the university towns table and created a column indicating if the town is a university town.
+    univ_towns_table = get_list_of_university_towns()
+    univ_towns_table['University Town'] = True
+    
+    # Retrieved the housing data and the start and bottom of the recession.
+    housing = convert_housing_data_to_quarters()
     start = '2008q2'
     bottom = get_recession_bottom()
-    houses = convert_housing_data_to_quarters()
+    housing = housing.reset_index()
     
-    houses = houses.reset_index()
-    
-    all_towns = houses.merge(towns, how='left', on=['State', 'RegionName'])
+    # Merged the housing and university town data, only keeping rows that appeared in the housing data. All NaN values signified non-university towns, so I replaced with a value of false for the t-test.
+    all_towns = housing.merge(univ_towns_table, how='left', on=['State', 'RegionName'])
     all_towns['University Town'] = all_towns['University Town'].replace({np.NaN: False})
+    
+    # Calculated the price difference to be used in our t-tes to determine mean price ratio (aka reduced market loss).
     all_towns['Price Difference'] = all_towns[start]/all_towns[bottom]
     
-    
-    
+    # Created the two datasets with university and non-university towns to test the hypothesis.
     univ_towns = all_towns[all_towns['University Town'] == True]
     non_univ_towns = all_towns[all_towns['University Town'] == False]
     
+    # Ran the t-test.
     t,p = ttest_ind(univ_towns['Price Difference'], non_univ_towns['Price Difference'],nan_policy='omit')
     different = True if p < 0.01 else False
     better = 'university town' if univ_towns['Price Difference'].mean() < non_univ_towns['Price Difference'].mean() else "Non-University Town"
@@ -204,3 +203,8 @@ def run_ttest():
     return different, p, better
     
 run_ttest()
+```
+'(True, 0.0027240637047531249, 'university town')'
+
+### Results
+With a p-value of 0.0027240637047531249 < .05, we fail to reject the hypothesis. Thus, university towns seem to be less affected by recessions than non-university towms.
