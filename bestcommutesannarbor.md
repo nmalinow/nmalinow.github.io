@@ -25,7 +25,6 @@ import pandas as pd
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
-import seaborn as sb
 ```
 
 Scraped cities and their distances from Ann Arbor, only focusing on cities within 15 miles.
