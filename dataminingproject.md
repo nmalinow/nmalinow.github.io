@@ -131,9 +131,7 @@ def test_document_path_similarity():
 '0.554265873015873'
 
 paraphrases is a DataFrame which contains the following columns: Quality, D1, and D2.
-
 Quality is an indicator variable which indicates if the two documents D1 and D2 are paraphrases of one another (1 for paraphrase, 0 for not paraphrase).
-
 ```
 #Use this dataframe for questions most_similar_docs and label_accuracy
 paraphrases = pd.read_csv('paraphrases.csv')
