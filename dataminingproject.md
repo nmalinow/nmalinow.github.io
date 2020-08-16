@@ -70,7 +70,6 @@ def doc_to_synsets(doc):
 
 
     return synsets
-```
 
 def similarity_score(s1, s2):
     #"""
@@ -128,7 +127,7 @@ def test_document_path_similarity():
     doc2 = 'Use this function to see if your code in doc_to_synsets \
     and similarity_score is correct!'
     return document_path_similarity(doc1, doc2)
-
+```
 
 #paraphrases is a DataFrame which contains the following columns: Quality, D1, and D2.
 
