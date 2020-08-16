@@ -68,15 +68,15 @@ Using your trained classifier, return a series of length 252 with the data being
 
 Example:
 
-   _1       1.0
-   _2       0.0
-   _5       0.8
-   _8       1.0
-   _    ...
-   _996     0.7
-   _1000    0.5
-   _1001    0.0
-   _Length: 252, dtype: float64
+   </br>_1       1.0
+   </br>_2       0.0
+   </br>_5       0.8
+   </br>_8       1.0
+   </br>_    ...
+   </br>_996     0.7
+   </br>_1000    0.5
+   </br>_1001    0.0
+   </br>_Length: 252, dtype: float64
 ```
 G = nx.read_gpickle('email_prediction.txt')
 
@@ -137,15 +137,15 @@ Using your trained classifier, return a series of length 122112 with the data be
 
 Example:
 
-_(107, 348)    0.35
-_(542, 751)    0.40
-_(20, 426)     0.55
-_(50, 989)     0.35
-_          ...
-_(939, 940)    0.15
-_(555, 905)    0.35
-_(75, 101)     0.65
-_Length: 122112, dtype: float64
+</br>_(107, 348)    0.35
+</br>_(542, 751)    0.40
+</br>_(20, 426)     0.55
+</br>_(50, 989)     0.35
+</br>_          ...
+</br>_(939, 940)    0.15
+</br>_(555, 905)    0.35
+</br>_(75, 101)     0.65
+</br>_Length: 122112, dtype: float64
     
     
 ```    
