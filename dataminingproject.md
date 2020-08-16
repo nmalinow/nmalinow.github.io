@@ -116,11 +116,10 @@ def document_path_similarity(doc1, doc2):
     synsets2 = doc_to_synsets(doc2)
 
     return (similarity_score(synsets1, synsets2) + similarity_score(synsets2, synsets1)) / 2
-
 ```
 
-**test_document_path_similarity**
-Use this function to check if doc_to_synsets and similarity_score are correct.
+**test_document_path_similarity**<br/>
+Use this function to check if doc_to_synsets and similarity_score are correct.<br/>
 _This function should return the similarity score as a float._
 ```
 def test_document_path_similarity():
@@ -140,8 +139,8 @@ Quality is an indicator variable which indicates if the two documents D1 and D2 
 paraphrases = pd.read_csv('paraphrases.csv')
 ```
 
-**most_similar_docs**
-Using document_path_similarity, find the pair of documents in paraphrases which has the maximum similarity score.
+**most_similar_docs**<br/>
+Using document_path_similarity, find the pair of documents in paraphrases which has the maximum similarity score.<br/>
 _This function should return a tuple (D1, D2, similarity_score)_
 ```
 def most_similar_docs():
@@ -155,8 +154,8 @@ def most_similar_docs():
  '"Iran should be on notice that attempts to remake Iraq in Iran\'s image will be aggressively put down," he said.\n',
  0.97530864197530864)
  
-**label_accuracy**
-Provide labels for the twenty pairs of documents by computing the similarity for each pair using document_path_similarity. Let the classifier rule be that if the score is greater than 0.75, label is paraphrase (1), else label is not paraphrase (0). Report accuracy of the classifier using scikit-learn's accuracy_score.
+**label_accuracy**<br/>
+Provide labels for the twenty pairs of documents by computing the similarity for each pair using document_path_similarity. Let the classifier rule be that if the score is greater than 0.75, label is paraphrase (1), else label is not paraphrase (0). Report accuracy of the classifier using scikit-learn's accuracy_score.<br/>
 _This function should return a float._
 ```
 def label_accuracy():
@@ -182,7 +181,7 @@ def label_accuracy():
 
 ### Part 2 - Topic Modelling
 For the second part of this assignment, you will use Gensim's LDA (Latent Dirichlet Allocation) model to model topics in newsgroup_data. You will first need to finish the code in the cell below by using gensim.models.ldamodel.LdaModel constructor to estimate LDA model parameters on the corpus, and save to the variable ldamodel. Extract 10 topics using corpus and id_map, and with passes=25 and random_state=34.
-
+________________________________________________________________________________________________________
 First, I imported the required libraries.
 ```
 import pickle
@@ -215,10 +214,10 @@ id_map = dict((v, k) for k, v in vect.vocabulary_.items())
 ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=10, id2word=id_map, passes=25, random_state=34)
 ```
 
-**lda_topics**
-Using ldamodel, find a list of the 10 topics and the most significant 10 words in each topic. This should be structured as a list of 10 tuples where each tuple takes on the form:
-#(9, '0.068*"space" + 0.036*"nasa" + 0.021*"science" + 0.020*"edu" + 0.019*"data" + 0.017*"shuttle" + 0.015*"launch" + 0.015*"available" + 0.014*"center" + 0.014*"sci"')
-#for example.
+**lda_topics**<br/>
+Using ldamodel, find a list of the 10 topics and the most significant 10 words in each topic. This should be structured as a list of 10 tuples where each tuple takes on the form:<br/>
+(9, '0.068*"space" + 0.036*"nasa" + 0.021*"science" + 0.020*"edu" + 0.019*"data" + 0.017*"shuttle" + 0.015*"launch" + 0.015*"available" + 0.014*"center" + 0.014*"sci"')
+for example.<br/>
 _This function should return a list of tuples._
 ```
 def lda_topics():
@@ -246,8 +245,8 @@ def lda_topics():
  (9,
   '0.068*"space" + 0.036*"nasa" + 0.021*"science" + 0.020*"edu" + 0.019*"data" + 0.017*"shuttle" + 0.015*"launch" + 0.015*"available" + 0.014*"center" + 0.014*"sci"')]
   
-**topic_distribution**
-For the new document new_doc, find the topic distribution. Remember to use vect.transform on the the new doc, and Sparse2Corpus to convert the sparse matrix to gensim corpus.
+**topic_distribution**<br/>
+For the new document new_doc, find the topic distribution. Remember to use vect.transform on the the new doc, and Sparse2Corpus to convert the sparse matrix to gensim corpus.<br/>
 _This function should return a list of tuples, where each tuple is (#topic, probability)_
 ```
 new_doc = ["\n\nIt's my understanding that the freezing will start to occur because \
@@ -273,9 +272,9 @@ def topic_distribution():
  (8, 0.020001848233010606),
  (9, 0.34367516653200242)]
 
-**topic_names**
-From the list of the following given topics, assign topic names to the topics you found. If none of these names best matches the topics you found, create a new 1-3 word "title" for the topic.
-#Topics: Health, Science, Automobiles, Politics, Government, Travel, Computers & IT, Sports, Business, Society & Lifestyle, Religion, Education.
+**topic_names**<br/>
+From the list of the following given topics, assign topic names to the topics you found. If none of these names best matches the topics you found, create a new 1-3 word "title" for the topic.<br/>
+Topics: Health, Science, Automobiles, Politics, Government, Travel, Computers & IT, Sports, Business, Society & Lifestyle, Religion, Education.<br/>
 _This function should return a list of 10 strings._
 ```
 def topic_names():
