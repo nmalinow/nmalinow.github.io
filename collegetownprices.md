@@ -5,11 +5,11 @@ Hypothesis: University towns have their mean housing prices less effected by rec
 
 ### Background
 
--A quarter is a specific three month period, Q1 is January through March, Q2 is April through June, Q3 is July through September, Q4 is October through December.
--A recession is defined as starting with two consecutive quarters of GDP decline, and ending with two consecutive quarters of GDP growth.
--A recession bottom is the quarter within a recession which had the lowest GDP.
+- A quarter is a specific three month period, Q1 is January through March, Q2 is April through June, Q3 is July through September, Q4 is October through December.
+- A recession is defined as starting with two consecutive quarters of GDP decline, and ending with two consecutive quarters of GDP growth.
+- A recession bottom is the quarter within a recession which had the lowest GDP.
 -A university town is a city which has a high percentage of university students compared to the total population of the city.
--Hypothesis: University towns have their mean housing prices less effected by recessions. Run a t-test to compare the ratio of the mean price of houses in university towns the quarter before the recession starts compared to the recession bottom. (price_ratio=quarter_before_recession/recession_bottom)
+- Hypothesis: University towns have their mean housing prices less effected by recessions. Run a t-test to compare the ratio of the mean price of houses in university towns the quarter before the recession starts compared to the recession bottom. (price_ratio=quarter_before_recession/recession_bottom)
 
 The following data files are available for this assignment:
 
@@ -46,7 +46,7 @@ zillow = pd.read_csv("City_Zhvi_AllHomes.csv")
 zillow.head()
 ```
 
-# Cleaning the Data
+### Cleaning the Data
 
 First, I had to map states to acronyms to merge the university towns with the zillow dataset. So, I used this dictionary.
 ```
