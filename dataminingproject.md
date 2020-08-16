@@ -117,41 +117,48 @@ def document_path_similarity(doc1, doc2):
 
     return (similarity_score(synsets1, synsets2) + similarity_score(synsets2, synsets1)) / 2
 
+```
 
-#test_document_path_similarity
-#Use this function to check if doc_to_synsets and similarity_score are correct.
-#This function should return the similarity score as a float.
-
+**test_document_path_similarity**
+Use this function to check if doc_to_synsets and similarity_score are correct.
+_This function should return the similarity score as a float._
+```
 def test_document_path_similarity():
     doc1 = 'This is a function to test document_path_similarity.'
     doc2 = 'Use this function to see if your code in doc_to_synsets \
     and similarity_score is correct!'
     return document_path_similarity(doc1, doc2)
 ```
+'0.554265873015873'
 
-#paraphrases is a DataFrame which contains the following columns: Quality, D1, and D2.
+paraphrases is a DataFrame which contains the following columns: Quality, D1, and D2.
 
-#Quality is an indicator variable which indicates if the two documents D1 and D2 are paraphrases of one another (1 for paraphrase, 0 for not paraphrase).
+Quality is an indicator variable which indicates if the two documents D1 and D2 are paraphrases of one another (1 for paraphrase, 0 for not paraphrase).
 
-# Use this dataframe for questions most_similar_docs and label_accuracy
+```
+#Use this dataframe for questions most_similar_docs and label_accuracy
 paraphrases = pd.read_csv('paraphrases.csv')
+```
 
-
-#most_similar_docs
-#Using document_path_similarity, find the pair of documents in paraphrases which has the maximum similarity score.
-#This function should return a tuple (D1, D2, similarity_score)
-
+**most_similar_docs**
+Using document_path_similarity, find the pair of documents in paraphrases which has the maximum similarity score.
+_This function should return a tuple (D1, D2, similarity_score)_
+```
 def most_similar_docs():
 
     df = paraphrases.copy()
     df['Similarity'] = df.apply(lambda row: document_path_similarity(row['D1'], row['D2']), axis=1)
     ans = df.loc[df['Similarity'] == df['Similarity'].max()].squeeze().values
     return ans[1], ans[2], ans[3]
-
-#label_accuracy
-#Provide labels for the twenty pairs of documents by computing the similarity for each pair using document_path_similarity. Let the classifier rule be that if the score is greater than 0.75, label is paraphrase (1), else label is not paraphrase (0). Report accuracy of the classifier using scikit-learn's accuracy_score.
-#This function should return a float.
-
+```
+('"Indeed, Iran should be put on notice that efforts to try to remake Iraq in their image will be aggressively put down," he said.',
+ '"Iran should be on notice that attempts to remake Iraq in Iran\'s image will be aggressively put down," he said.\n',
+ 0.97530864197530864)
+ 
+**label_accuracy**
+Provide labels for the twenty pairs of documents by computing the similarity for each pair using document_path_similarity. Let the classifier rule be that if the score is greater than 0.75, label is paraphrase (1), else label is not paraphrase (0). Report accuracy of the classifier using scikit-learn's accuracy_score.
+_This function should return a float._
+```
 def label_accuracy():
     from sklearn.metrics import accuracy_score
 
@@ -170,21 +177,24 @@ def label_accuracy():
     score = accuracy_score(df['Quality'], df['Labels'])
 
     return score
+```
+'0.80000000000000004'
 
-
-
-Part 2 - Topic Modelling
+### Part 2 - Topic Modelling
 For the second part of this assignment, you will use Gensim's LDA (Latent Dirichlet Allocation) model to model topics in newsgroup_data. You will first need to finish the code in the cell below by using gensim.models.ldamodel.LdaModel constructor to estimate LDA model parameters on the corpus, and save to the variable ldamodel. Extract 10 topics using corpus and id_map, and with passes=25 and random_state=34.
 
+First, I imported the required libraries.
+```
 import pickle
 import gensim
 from sklearn.feature_extraction.text import CountVectorizer
+```
 
-# Load the list of documents
-
+Then I loaded the list of documents.
+```
 with open('newsgroups', 'rb') as f:
     newsgroup_data = pickle.load(f)
-​
+ 
 # Use CountVectorizor to find three letter tokens, remove stop_words, 
 # remove tokens that don't appear in at least 20 documents,
 # remove tokens that appear in more than 20% of the documents
@@ -203,23 +213,43 @@ id_map = dict((v, k) for k, v in vect.vocabulary_.items())
 # LDA model parameters on the corpus, and save to the variable `ldamodel`
 
 ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=10, id2word=id_map, passes=25, random_state=34)
+```
 
-
-#lda_topics
-#Using ldamodel, find a list of the 10 topics and the most significant 10 words in each topic. This should be structured as a list of 10 tuples where each tuple takes on the form:
+**lda_topics**
+Using ldamodel, find a list of the 10 topics and the most significant 10 words in each topic. This should be structured as a list of 10 tuples where each tuple takes on the form:
 #(9, '0.068*"space" + 0.036*"nasa" + 0.021*"science" + 0.020*"edu" + 0.019*"data" + 0.017*"shuttle" + 0.015*"launch" + 0.015*"available" + 0.014*"center" + 0.014*"sci"')
 #for example.
-#This function should return a list of tuples.
-
+_This function should return a list of tuples._
+```
 def lda_topics():
     topics = ldamodel.print_topics()
     return topics
-
-
-#topic_distribution
-#For the new document new_doc, find the topic distribution. Remember to use vect.transform on the the new doc, and Sparse2Corpus to convert the sparse matrix to gensim corpus.
-#This function should return a list of tuples, where each tuple is (#topic, probability)
-
+```
+[(0,
+  '0.056*"edu" + 0.043*"com" + 0.033*"thanks" + 0.022*"mail" + 0.021*"know" + 0.020*"does" + 0.014*"info" + 0.012*"monitor" + 0.010*"looking" + 0.010*"don"'),
+ (1,
+  '0.024*"ground" + 0.018*"current" + 0.018*"just" + 0.013*"want" + 0.013*"use" + 0.011*"using" + 0.011*"used" + 0.010*"power" + 0.010*"speed" + 0.010*"output"'),
+ (2,
+  '0.061*"drive" + 0.042*"disk" + 0.033*"scsi" + 0.030*"drives" + 0.028*"hard" + 0.028*"controller" + 0.027*"card" + 0.020*"rom" + 0.018*"floppy" + 0.017*"bus"'),
+ (3,
+  '0.023*"time" + 0.015*"atheism" + 0.014*"list" + 0.013*"left" + 0.012*"alt" + 0.012*"faq" + 0.012*"probably" + 0.011*"know" + 0.011*"send" + 0.010*"months"'),
+ (4,
+  '0.025*"car" + 0.016*"just" + 0.014*"don" + 0.014*"bike" + 0.012*"good" + 0.011*"new" + 0.011*"think" + 0.010*"year" + 0.010*"cars" + 0.010*"time"'),
+ (5,
+  '0.030*"game" + 0.027*"team" + 0.023*"year" + 0.017*"games" + 0.016*"play" + 0.012*"season" + 0.012*"players" + 0.012*"win" + 0.011*"hockey" + 0.011*"good"'),
+ (6,
+  '0.017*"information" + 0.014*"help" + 0.014*"medical" + 0.012*"new" + 0.012*"use" + 0.012*"000" + 0.012*"research" + 0.011*"university" + 0.010*"number" + 0.010*"program"'),
+ (7,
+  '0.022*"don" + 0.021*"people" + 0.018*"think" + 0.017*"just" + 0.012*"say" + 0.011*"know" + 0.011*"does" + 0.011*"good" + 0.010*"god" + 0.009*"way"'),
+ (8,
+  '0.034*"use" + 0.023*"apple" + 0.020*"power" + 0.016*"time" + 0.015*"data" + 0.015*"software" + 0.012*"pin" + 0.012*"memory" + 0.012*"simms" + 0.012*"port"'),
+ (9,
+  '0.068*"space" + 0.036*"nasa" + 0.021*"science" + 0.020*"edu" + 0.019*"data" + 0.017*"shuttle" + 0.015*"launch" + 0.015*"available" + 0.014*"center" + 0.014*"sci"')]
+  
+**topic_distribution**
+For the new document new_doc, find the topic distribution. Remember to use vect.transform on the the new doc, and Sparse2Corpus to convert the sparse matrix to gensim corpus.
+_This function should return a list of tuples, where each tuple is (#topic, probability)_
+```
 new_doc = ["\n\nIt's my understanding that the freezing will start to occur because \
 of the\ngrowing distance of Pluto and Charon from the Sun, due to it's\nelliptical orbit. \
 It is not due to shadowing effects. \n\n\nPluto can shadow Charon, and vice-versa.\n\nGeorge \
@@ -231,13 +261,23 @@ def topic_distribution():
     corp = gensim.matutils.Sparse2Corpus(new_doc_vect, documents_columns=False)
 
     return list(ldamodel.get_document_topics(corp))[0]
+```
+[(0, 0.020001831829864054),
+ (1, 0.02000204822465949),
+ (2, 0.02000000083212411),
+ (3, 0.49631042031583406),
+ (4, 0.020002764135450282),
+ (5, 0.020002856012202509),
+ (6, 0.020001696374813884),
+ (7, 0.020001367510038583),
+ (8, 0.020001848233010606),
+ (9, 0.34367516653200242)]
 
-
-#topic_names
-#From the list of the following given topics, assign topic names to the topics you found. If none of these names best matches the topics you found, create a new 1-3 word "title" for the topic.
+**topic_names**
+From the list of the following given topics, assign topic names to the topics you found. If none of these names best matches the topics you found, create a new 1-3 word "title" for the topic.
 #Topics: Health, Science, Automobiles, Politics, Government, Travel, Computers & IT, Sports, Business, Society & Lifestyle, Religion, Education.
-#This function should return a list of 10 strings.
-
+_This function should return a list of 10 strings._
+```
 def topic_names():
 
     labels = ['Health', 'Automobiles', 'Government', 'Travel', 'Computers & IT', 'Sports', 'Business', 'Society & Lifestyle', 'Region', 'Education']
@@ -254,3 +294,24 @@ def topic_names():
         best_match = sorted(zip(similarity, labels))[-1][1]
         results.append(best_match)
     return results
+```
+0.056*"edu" + 0.043*"com" + 0.033*"thanks" + 0.022*"mail" + 0.021*"know" + 0.020*"does" + 0.014*"info" + 0.012*"monitor" + 0.010*"looking" + 0.010*"don"
+0.024*"ground" + 0.018*"current" + 0.018*"just" + 0.013*"want" + 0.013*"use" + 0.011*"using" + 0.011*"used" + 0.010*"power" + 0.010*"speed" + 0.010*"output"
+0.061*"drive" + 0.042*"disk" + 0.033*"scsi" + 0.030*"drives" + 0.028*"hard" + 0.028*"controller" + 0.027*"card" + 0.020*"rom" + 0.018*"floppy" + 0.017*"bus"
+0.023*"time" + 0.015*"atheism" + 0.014*"list" + 0.013*"left" + 0.012*"alt" + 0.012*"faq" + 0.012*"probably" + 0.011*"know" + 0.011*"send" + 0.010*"months"
+0.025*"car" + 0.016*"just" + 0.014*"don" + 0.014*"bike" + 0.012*"good" + 0.011*"new" + 0.011*"think" + 0.010*"year" + 0.010*"cars" + 0.010*"time"
+0.030*"game" + 0.027*"team" + 0.023*"year" + 0.017*"games" + 0.016*"play" + 0.012*"season" + 0.012*"players" + 0.012*"win" + 0.011*"hockey" + 0.011*"good"
+0.017*"information" + 0.014*"help" + 0.014*"medical" + 0.012*"new" + 0.012*"use" + 0.012*"000" + 0.012*"research" + 0.011*"university" + 0.010*"number" + 0.010*"program"
+0.022*"don" + 0.021*"people" + 0.018*"think" + 0.017*"just" + 0.012*"say" + 0.011*"know" + 0.011*"does" + 0.011*"good" + 0.010*"god" + 0.009*"way"
+0.034*"use" + 0.023*"apple" + 0.020*"power" + 0.016*"time" + 0.015*"data" + 0.015*"software" + 0.012*"pin" + 0.012*"memory" + 0.012*"simms" + 0.012*"port"
+0.068*"space" + 0.036*"nasa" + 0.021*"science" + 0.020*"edu" + 0.019*"data" + 0.017*"shuttle" + 0.015*"launch" + 0.015*"available" + 0.014*"center" + 0.014*"sci"
+['Society & Lifestyle',
+ 'Education',
+ 'Education',
+ 'Education',
+ 'Automobiles',
+ 'Education',
+ 'Education',
+ 'Society & Lifestyle',
+ 'Education',
+ 'Society & Lifestyle']
