@@ -127,7 +127,7 @@ ax2.axhspan(.05,.07,xmin=0,xmax=.5, fc='silver', alpha =.7, zorder=0)
 ax2.axhspan(.03,.05, xmin=0, xmax=.5, fc='rosybrown', alpha =.7, zorder=0)
 ```
 # Results and Conclusions
-![](https://github.com/nmalinow.nmalinow.github.io/images/AnnArborGraphic.png)
+<img src= "https://github.com/nmalinow.nmalinow.github.io/images/AnnArborGraphic.png" />
 The visualization is meant to help answer the question of which city surrounding Ann Arbor is best for someone moving for a job who want to live close to Ann Arbor. Only cities within 15 miles of Ann Arbor were considered, and only results which were in all datasets. Points within the top 50% of both variables were given a gold ranking, while points in the top 50% of one variable and bottom 50% of another variable were given silver rankings. Finally, cities in the bottom 50% of both variables were given bronze rankings.
 
 The first scatterplot plots average commute times with the distance to Ann Arbor from the city. The top cities based on these variables were Ypsilanti, Whitmore Lake, and Saline. This is important for individuals who want to live close to the city and not experience a long commute to their job.
