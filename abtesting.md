@@ -1,6 +1,6 @@
 # Using Website Event Tagging Data to A/B Test Ads
 
-### Hypothesis: There is a difference in purchases as a result of the ad.
+### Hypothesis: There is a difference in purchases as a result of the new ad.
 _______________________________________________________________________________
 
 ### Check the table
@@ -107,4 +107,4 @@ GROUP BY
 ```
 
 ### Results
-There is an improvement of 2.6% in the conversion rate of products with the ad. However, with a p value of .2 the results are not statistically significant. We cannot conclude that the variation was caused by the ad.
+There is an improvement of 2.6% in the conversion rate of products with the new ad. However, with a p value of .2 the results are not statistically significant. We cannot conclude that the variation was caused by the new ad.
