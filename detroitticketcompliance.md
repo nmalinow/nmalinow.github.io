@@ -85,43 +85,37 @@ _ticket_id_
 Hints:
 Generally the total runtime should be less than 10 mins. You should NOT use Neural Network related classifiers (e.g., MLPClassifier) in this question.
 ________________________________________________________________________________
+All of the code below was made into one function blight_model(), per the requirements of the autograder. It is broken into sections for viewing reasons.
+
+Initializing function and importing libraries.
 ```
 def blight_model():
     
     import pandas as pd
     import numpy as np
-    #import matplotlib.pyplot as plt
+    import matplotlib.pyplot as plt
     from sklearn.model_selection import train_test_split
     from adspy_shared_utilities import plot_class_regions_for_classifier_subplot
     from sklearn.metrics import roc_curve, auc
-    #import seaborn as sns
+    import seaborn as sns
     from sklearn import preprocessing
     from sklearn.model_selection import cross_val_score
     from sklearn.preprocessing import MinMaxScaler
     from sklearn.ensemble import AdaBoostClassifier
-
+```
+I had to load and preview the datasets to merge them into one to use in our analysis.
+```
     train = pd.read_csv('train.csv', encoding='ISO-8859-1', dtype={'zip_code': str, 'non_us_str_code': str, 'grafitti_status': str, 'violator_name':str, 
                             'mailing_address_str_number': str})
 
     latlons = pd.read_csv('latlons.csv', encoding='ISO-8859-1')
     address = pd.read_csv('addresses.csv', encoding='ISO-8859-1')
-
     coord = address.merge(latlons, how='inner', on='address')
-
     train = train.merge(coord, how='inner', on='ticket_id')
+``` 
 
-    train = train.fillna(method='pad')
-    #train = train.fillna(train.mean())
-
-    dropped = ['balance_due',
-            'collection_status',
-            'compliance_detail',
-            'payment_amount',
-            'payment_date',
-            'payment_status']
-
-    train.drop(dropped, axis=1, inplace=True)
-
+I dropped string values that I was not likely to encode, except violation code and disposition which I was likely to encode.
+```
     dropstr = [
             'address', 'violator_name', 'zip_code', 'country', 'city',
             'inspector_name', 'violation_street_number', 'violation_street_name',
@@ -130,52 +124,146 @@ def blight_model():
             'non_us_str_code', 'agency_name', 'state', #'disposition',
             'ticket_issued_date', 'hearing_date', 'grafitti_status', #'violation_code'
     ]
-
-    moredrop = ['admin_fee', 'state_fee', 'clean_up_cost', 
-                #'lon', 'lat'
-               ]
-
     train.drop(dropstr, axis=1, inplace=True)
-    train.drop(moredrop, axis=1, inplace=True)
-    
-# Preprocessing the training data with the Label Encoder
+```
+
+I encoded the violation code and disposition.
+```
     le = preprocessing.LabelEncoder()
     le.fit(train['violation_code'])
     train['violation_code'] = le.transform(train['violation_code'])
+
     le.fit(train['disposition'])
     train['disposition'] = le.transform(train['disposition'])
-    
-# Loading training data
+```
+
+I chose a fillna method. (I chose pad after finding it worked with the model better.)
+```
+    train = train.fillna(method='pad')
+```
+
+I graphed the correlation between variables.
+```
+    plt.figure(figsize=(10,10))
+    correlation = train.corr()
+    sns.heatmap(correlation, annot=True)
+    plt.xticks(rotation=45)
+    plt.yticks(rotation=45)
+```
+
+I initially dropped columns due to potential data leakage.
+```
+   dropped = ['balance_due',
+           'collection_status',
+           'compliance_detail',
+           'payment_amount',
+           'payment_date',
+           'payment_status']
+   train.drop(dropped, axis=1, inplace=True)
+```
+
+Reviewing the corrrelations, I dropped columns with weak correlations. I kept lat and lon after testing the model and based on common sense that location affects factors that affect compliance.
+```
+    moredrop = ['admin_fee', 'state_fee', 'clean_up_cost', 
+                #'lon', 'lat'
+               ]
+    train.drop(moredrop, axis=1, inplace=True)
+```
+
+I then formatted the training data.
+```
     X = train.loc[:, train.columns != 'compliance']
     y = train.iloc[:,-3]
     y = y.astype(int)
-    
-# Fitting and transofrming data with Min Max Scaler
+```
+
+I fitted and transformed the data with Min Max Scaler.
+```
     scaler = MinMaxScaler()
     X = scaler.fit_transform(X)
-    
-# Splitting into train/test sets
-    X_train, X_test, y_train, y_test = train_test_split(X,y, random_state=0)
+```
 
-# Classifier to run (optimized after testing)
+I split the data into train/test(validation) sets.
+```
+    X_train, X_test, y_train, y_test = train_test_split(X,y, random_state=0)
+```
+
+I tested different algorithms using the split.
+```
+from sklearn.svm import SVC
+#from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import cross_val_score
+#from sklearn.ensemble import AdaBoostClassifier
+
+# Create list of models
+models = []
+models.append(('LR', LogisticRegression(solver='liblinear', multi_class='ovr')))
+models.append(('KNN', KNeighborsClassifier()))
+models.append(('DTC', DecisionTreeClassifier()))
+models.append(('RFC', RandomForestClassifier()))
+#models.append(('NB', GaussianNB()))
+models.append(('SVM', SVC(gamma='auto')))
+models.append(('ADAB', AdaBoostClassifier()))
+
+# Evaluate each model
+output = []
+names = []
+for name, model in models:
+    kfold = StratifiedKFold(n_splits=3, random_state=0, shuffle=True)
+    cv_results = cross_val_score(model, X_train, y_train, cv=kfold, scoring='accuracy')
+    output.append(cv_results)
+    names.append(name)
+    print('%s: %f (%f)' % (name, cv_results.mean(), cv_results.std()))
+```
+LR: 0.924327 (0.000053)
+KNN: 0.927529 (0.000150)
+DTC: 0.896116 (0.000915)
+RFC: 0.930698 (0.000629)
+NB: 0.928232 (0.000098)
+SVM: 0.924237 (0.000035)
+ADAB: 0.933431 (0.000132)
+
+Since the ADABoostClassifier had the highest accuracy score, I chose this model. I then tuned the hyperparameters with GridSearchCV.
+   ```
+    from sklearn.ensemble import AdaBoostClassifier
+    from sklearn.model_selection import GridSearchCV
+
+    clf = AdaBoostClassifier()
+
+    model_params = {
+        'learning_rate': [.1,.25,.5,.75,1,1.25,1.5,1.75,2]
+    }
+
+    gridsearch = GridSearchCV(clf, model_params)
+
+    model = gridsearch.fit(X_train, y_train)
+    model.best_estimator_.get_params()
+   ```
+ {'algorithm': 'SAMME.R',
+ 'base_estimator': None,
+ 'learning_rate': 0.5,
+ 'n_estimators': 50,
+ 'random_state': None}
+  
+A learning rate of .5 yielded the best results so I used it in my classifier and tested on my validation test from my training data to make sure it was still accurate.
+   ```
     clf = AdaBoostClassifier(learning_rate=.25).fit(X_train, y_train)
     
-    #y_pred = clf.predict_proba(X_test)[:, 1]
-    #fpr_clf, tpr_clf, _ = roc_curve(y_test, y_pred)
-    #roc_auc_clf = auc(fpr_clf, tpr_clf)
+    from sklearn.metrics import accuracy_score
+    clf = AdaBoostClassifier(learning_rate=.5).fit(X_train, y_train)
+    predictions = clf.predict(X_test)
+    print(accuracy_score(y_test, predictions))
+   ```
+   0.932770826342
 
-    #plt.figure()
-    #plt.xlim([-0.01, 1.00])
-    #plt.ylim([-0.01, 1.01])
-    #plt.plot(fpr_clf, tpr_clf, lw=3, label='LogRegr ROC curve (area = {:0.2f})'.format(roc_auc_clf))
-    #plt.xlabel('False Positive Rate', fontsize=16)
-    #plt.ylabel('True Positive Rate', fontsize=16)
-    #plt.title('ROC curve (blight ticket compliance in Detroit)', fontsize=16)
-    #plt.legend(loc='lower right', fontsize=13)
-    #plt.plot([0, 1], [0, 1], color='navy', lw=3, linestyle='--')
-    #plt.axes().set_aspect('equal')
-    #plt.show()
-    
+I then repeated the previous steps with the test data and outputted the required format for the autograder.
+```
 # Creating test set and merging with geographical data
     X_testset = pd.read_csv('test.csv', encoding='ISO-8859-1', dtype={'zip_code': str, 'non_us_str_code': str, 'grafitti_status': str, 'violator_name':str, 
                         'mailing_address_str_number': str})
@@ -199,7 +287,7 @@ def blight_model():
 # Calculating probabilities and putting into form specified for autograder
     test_pred = clf.predict_proba(X_testsetfinal)[:,1]
     ans = pd.DataFrame(test_pred,index=X_testset.ticket_id.values, columns=['Probability'])
-    ans.index.name = 'ticket_id'
-    
+    ans.index.name = 'ticket_id'    
     return ans
 ```
+The resulting AUC was 0.788964207005 which achieved full marks (passing was 0.7, full marks was 0.75).
