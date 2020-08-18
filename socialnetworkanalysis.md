@@ -19,6 +19,8 @@ Small World with low probability of rewiring ('SW_L')
 Small World with high probability of rewiring ('SW_H')
 Anaylze each of the 5 graphs and determine which of the three algorithms generated the graph.
 
+
+
 The graph_identification function should return a list of length 5 where each element in the list is either 'PA', 'SW_L', or 'SW_H'.
 ```
 P1_Graphs = pickle.load(open('A4_graphs','rb')) 
@@ -45,7 +47,8 @@ def graph_identification():
             algorithm.append('SW_L')
     return algorithm
  ```
- 
+ ['PA', 'SW_L', 'SW_L', 'PA', 'SW_H']
+
 ## Part 2 - Company Emails
 For the second part of this assignment you will be workking with a company's email network where each node corresponds to a person at the company, and each edge indicates that at least one email has been sent between two people.
 
@@ -58,6 +61,9 @@ Let's get a peak at the data.
 G = nx.read_gpickle('email_prediction.txt')
 G.nodes(data=True)
 ```
+<p align="center">
+<img src= "/images/gnodesdata.png" class="center"/>
+</p>
 
 ### Part 2A - Salary Prediction
 Using network G, identify the people in the network with missing values for the node attribute ManagementSalary and predict whether or not these individuals are receiving a management position salary.
