@@ -1,4 +1,4 @@
-### Assignment 3 - Building a Custom Visualization
+# Assignment 3 - Building a Custom Visualization
 In this assignment you must choose one of the options presented below and submit a visual as well as your source code for peer grading. The details of how you solve the assignment are up to you, although your assignment must use matplotlib so that your peers can evaluate your work. The options differ in challenge level, but there are no grades associated with the challenge level you chose. However, your peers will be asked to ensure you at least met a minimum quality for a given technique in order to pass. Implement the technique fully (or exceed it!) and you should be able to earn full grades for the assignment.
 
       Ferreira, N., Fisher, D., & Konig, A. C. (2014, April). Sample-oriented task-driven visualizations: allowing users to make better, more confident decisions.       In Proceedings of the SIGCHI Conference on Human Factors in Computing Systems (pp. 571-580). ACM. (video)
@@ -30,8 +30,8 @@ Hardest option: Allow the user to interactively set a range of y values they are
 
 Note: The data given for this assignment is not the same as the data used in the article and as a result the visualizations may look a little different.
 _______________________________________________________________
-
-### Use the following data for this assignment:
+### Randomizing data
+Use the following data for this assignment:
 ```
 %matplotlib notebook
 import pandas as pd
@@ -44,13 +44,19 @@ df = pd.DataFrame([np.random.normal(32000,200000,3650),
                    np.random.normal(43500,140000,3650), 
                    np.random.normal(48000,70000,3650)], 
                   index=[1992,1993,1994,1995])
+df
 ```
+<p align="center">
+<img src= "/images/randomizeddata.png" class="center"/>
+</p>
 
 I had to transpose the data to use it in my graph.
 ```
 df = df.T
 df.columns = df.columns.astype(str)
 ```
+
+### Calculating mean and standard deviation
 I calculated the mean and standard deviation for each graph per the requirements.
 ```
 avg = []
@@ -59,6 +65,7 @@ for year in range(1992,1996):
     avg.append(df[str(year)].mean())
     std.append(df[str(year)].std())
 ```
+### Creating confidence intervals
 The next step was creating the confidence intervals.
 ```
 import math
@@ -74,7 +81,7 @@ for year in range(1992, 1996):
     upper.append(avg[year-1992] + (z*(std[year-1992]/math.sqrt(n))))
     ci.append(upper[year-1992] - lower[year-1992])
 ```
-
+### Creating the graph
 I normalized the curve and used a colormap for the data.
 ```
 from matplotlib.colors import Normalize
@@ -92,6 +99,7 @@ for i in range(0,4):
 
 df_c['Color'] = [cmap(x) for x in df_c['Value']]
 ```
+
 Now to plot the data and add labels.
 ```
 import matplotlib.pyplot as plt
@@ -109,3 +117,6 @@ plt.xlabel('Year')
 plt.ylabel('Mean Votes')
 plt.title('Average Votes per Year')
 ```
+<p align="center">
+<img src= "/images/C2W3.png" class="center"/>
+</p>
