@@ -117,7 +117,7 @@ def document_path_similarity(doc1, doc2):
 
     return (similarity_score(synsets1, synsets2) + similarity_score(synsets2, synsets1)) / 2
 ```
-
+<br/>
 **test_document_path_similarity**<br/>
 Use this function to check if doc_to_synsets and similarity_score are correct.<br/>
 _This function should return the similarity score as a float._
@@ -130,13 +130,13 @@ def test_document_path_similarity():
 ```
 '0.554265873015873'
 
-paraphrases is a DataFrame which contains the following columns: Quality, D1, and D2.
+Now, paraphrases is a DataFrame which contains the following columns: Quality, D1, and D2.
 Quality is an indicator variable which indicates if the two documents D1 and D2 are paraphrases of one another (1 for paraphrase, 0 for not paraphrase).
 ```
 #Use this dataframe for questions most_similar_docs and label_accuracy
 paraphrases = pd.read_csv('paraphrases.csv')
 ```
-
+<br/>
 **most_similar_docs**<br/>
 Using document_path_similarity, find the pair of documents in paraphrases which has the maximum similarity score.<br/>
 _This function should return a tuple (D1, D2, similarity_score)_
@@ -151,6 +151,7 @@ def most_similar_docs():
 ('"Indeed, Iran should be put on notice that efforts to try to remake Iraq in their image will be aggressively put down," he said.',
  '"Iran should be on notice that attempts to remake Iraq in Iran\'s image will be aggressively put down," he said.\n',
  0.97530864197530864)
+ 
  
 **label_accuracy**<br/>
 Provide labels for the twenty pairs of documents by computing the similarity for each pair using document_path_similarity. Let the classifier rule be that if the score is greater than 0.75, label is paraphrase (1), else label is not paraphrase (0). Report accuracy of the classifier using scikit-learn's accuracy_score.<br/>
@@ -211,7 +212,7 @@ id_map = dict((v, k) for k, v in vect.vocabulary_.items())
 
 ldamodel = gensim.models.ldamodel.LdaModel(corpus, num_topics=10, id2word=id_map, passes=25, random_state=34)
 ```
-
+<br/>
 **lda_topics**<br/>
 Using ldamodel, find a list of the 10 topics and the most significant 10 words in each topic. This should be structured as a list of 10 tuples where each tuple takes on the form:<br/>
 (9, '0.068*"space" + 0.036*"nasa" + 0.021*"science" + 0.020*"edu" + 0.019*"data" + 0.017*"shuttle" + 0.015*"launch" + 0.015*"available" + 0.014*"center" + 0.014*"sci"')
@@ -242,7 +243,7 @@ def lda_topics():
   '0.034*"use" + 0.023*"apple" + 0.020*"power" + 0.016*"time" + 0.015*"data" + 0.015*"software" + 0.012*"pin" + 0.012*"memory" + 0.012*"simms" + 0.012*"port"'),
  (9,
   '0.068*"space" + 0.036*"nasa" + 0.021*"science" + 0.020*"edu" + 0.019*"data" + 0.017*"shuttle" + 0.015*"launch" + 0.015*"available" + 0.014*"center" + 0.014*"sci"')]
-  
+<br/>
 **topic_distribution**<br/>
 For the new document new_doc, find the topic distribution. Remember to use vect.transform on the the new doc, and Sparse2Corpus to convert the sparse matrix to gensim corpus.<br/>
 _This function should return a list of tuples, where each tuple is (#topic, probability)_
@@ -269,7 +270,7 @@ def topic_distribution():
  (7, 0.020001367510038583),
  (8, 0.020001848233010606),
  (9, 0.34367516653200242)]
-
+<br/>
 **topic_names**<br/>
 From the list of the following given topics, assign topic names to the topics you found. If none of these names best matches the topics you found, create a new 1-3 word "title" for the topic.<br/>
 Topics: Health, Science, Automobiles, Politics, Government, Travel, Computers & IT, Sports, Business, Society & Lifestyle, Religion, Education.<br/>
