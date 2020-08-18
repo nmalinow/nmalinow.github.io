@@ -13,6 +13,10 @@ SELECT
 FROM 
   dsv1069.final_assignments_qa
 ```
+<p align="center">
+<img src= "/images/datacheck.png" class="center"/>
+</p>
+
 ### Reformat the table
 Reformat the final_assignments_qa to look like the final_assignments table, filling in any missing values with a placeholder of the appropriate data type.
 ```
@@ -24,6 +28,9 @@ SELECT
 FROM 
   dsv1069.final_assignments_qa
 ```
+<p align="center">
+<img src= "/images/reformatdata.png" class="center"/>
+</p>
 
 ### Order Binary Metric
 Create order binary for test.
@@ -57,6 +64,9 @@ FROM
 ) item_orders
 GROUP BY test_assignment
 ```
+<p align="center">
+<img src= "/images/orderbinary.png" class="center"/>
+</p>
 
 ### View Item Metric
 Compute view item metrics.
@@ -105,6 +115,13 @@ FROM
 GROUP BY 
  test_assignment
 ```
+<p align="center">
+<img src= "/images/viewitem.png" class="center"/>
+</p>
 
 ### Results
-There is an improvement of 2.6% in the conversion rate of products with the new ad. However, with a p value of .2 the results are not statistically significant. We cannot conclude that the variation was caused by the new ad.
+<p align="center">
+<img src= "/images/Metricgraphs.png" class="center"/>
+</p>
+
+Using the A/B testing required from this link: https://thumbtack.github.io/abba/demo/abba.html, I was able to calculate the p-value for a 95% confidence interval. There was an improvement of 2.6% in the conversion rate of products with the new ad. However, with a p value of .2 the results are not statistically significant. We cannot conclude that the variation was caused by the new ad.
