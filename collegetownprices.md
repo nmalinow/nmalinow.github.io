@@ -222,4 +222,4 @@ run_ttest()
 '(True, 0.0027240637047531249, 'university town')'
 
 ### Results
-With a p-value of 0.0027240637047531249 < .05, we fail to reject the hypothesis. Thus, university towns seem to be less affected by recessions than non-university towms.
+With a p-value of 0.0027240637047531249 < .05, we fail to reject the hypothesis. Thus, university towns mean housing prices seem to be less affected by recessions than non-university towms.
