@@ -2,12 +2,12 @@
 
 
 ## Python
-### [University Towns in Recessions: Hypothesis Testing](https://nmalinow.github.io/collegetownprices.html)
+### [University Towns in Recessions: Hypothesis Testing](/collegetownprices.html)
 ### [Best Ann Arbor Commuting Towns: Research Project](/bestcommutesannarbor.html)
-### [Text Mining Exercise](https://nmalinow.github.io/dataminingproject.md)
-### [Detriot Parking Ticket Compliance: Machine Learning](https://nmalinow.github.io/detroitticketcompliance.md)
-### [Social Network Analysis Exercise](https://nmalinow.github.io/socialnetworkanalysis.md)
-### [Matplotlib Exercise](https://nmalinow.github.io/customvisualization.md)
-### [Record High/Low Temperatures: Data Visualization](https://nmalinow.github.io/recordtemperatures.md)
+### [Text Mining Exercise](/dataminingproject.html)
+### [Detriot Parking Ticket Compliance: Machine Learning](/detroitticketcompliance.html)
+### [Social Network Analysis Exercise](/socialnetworkanalysis.md)
+### [Matplotlib Exercise](https://nmalinow.github.io/customvisualization.html)
+### [Record High/Low Temperatures: Data Visualization](/recordtemperatures.html)
 ## SQL
-### [A/B Testing Ads with Event Tagging Data](https://nmalinow.github.io/abtesting.md)
+### [A/B Testing Ads with Event Tagging Data](/abtesting.html)
