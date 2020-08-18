@@ -95,14 +95,14 @@ def blight_model():
     import pandas as pd
     import numpy as np
     import matplotlib.pyplot as plt
-    from sklearn.model_selection import train_test_split
     from adspy_shared_utilities import plot_class_regions_for_classifier_subplot
     from sklearn.metrics import roc_curve, auc
     import seaborn as sns
     from sklearn import preprocessing
-    from sklearn.model_selection import cross_val_score
+    from sklearn.model_selection import cross_val_score, accuracy_score, train_test_split
     from sklearn.preprocessing import MinMaxScaler
-    from sklearn.ensemble import AdaBoostClassifier
+    from sklearn.model_selection import GridSearchCV
+
 ```
 
 I had to load and preview the datasets to merge them into one to use in our analysis.
@@ -244,9 +244,6 @@ ADAB: 0.933431 (0.000132)
 ### Tuning hyperparameters
 Since the ADABoostClassifier had the highest accuracy score, I chose this model. I then tuned the hyperparameters with GridSearchCV.
    ```
-    from sklearn.ensemble import AdaBoostClassifier
-    from sklearn.model_selection import GridSearchCV
-
     clf = AdaBoostClassifier()
 
     model_params = {
@@ -266,10 +263,7 @@ Since the ADABoostClassifier had the highest accuracy score, I chose this model.
 
 ### Validating model
 A learning rate of .5 yielded the best results so I used it in my classifier and tested on my validation test from my training data to make sure it was still accurate.
-   ```
-    clf = AdaBoostClassifier(learning_rate=.25).fit(X_train, y_train)
-    
-    from sklearn.metrics import accuracy_score
+   ```    
     clf = AdaBoostClassifier(learning_rate=.5).fit(X_train, y_train)
     predictions = clf.predict(X_test)
     print(accuracy_score(y_test, predictions))
