@@ -120,6 +120,17 @@ I had to load and preview the datasets to merge them into one to use in our anal
 </p>
 
 ### Dropping values and preprocessing data
+I initially dropped columns due to potential data leakage.
+```
+   dropped = ['balance_due',
+           'collection_status',
+           'compliance_detail',
+           'payment_amount',
+           'payment_date',
+           'payment_status']
+   train.drop(dropped, axis=1, inplace=True)
+```
+
 I dropped string values that I was not likely to encode, except violation code and disposition which I was likely to encode.
 ```
     dropstr = [
@@ -157,17 +168,9 @@ I graphed the correlation between variables.
     plt.xticks(rotation=45)
     plt.yticks(rotation=45)
 ```
-
-I initially dropped columns due to potential data leakage.
-```
-   dropped = ['balance_due',
-           'collection_status',
-           'compliance_detail',
-           'payment_amount',
-           'payment_date',
-           'payment_status']
-   train.drop(dropped, axis=1, inplace=True)
-```
+<p align="center">
+<img src= "/images/mlcorrelations.png" class="center"/>
+</p>
 
 Reviewing the corrrelations, I dropped columns with weak correlations. I kept lat and lon after testing the model and based on common sense that location affects factors that affect compliance.
 ```
