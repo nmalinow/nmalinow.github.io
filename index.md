@@ -2,8 +2,8 @@
 
 
 ## Python
-### [University Towns in Recessions: Hypothesis Testing](https://nmalinow.github.io/collegetownprices.html)</br>
-### [Best Ann Arbor Commuting Towns: Research Project](https://nmalinow.github.io/bestcommutesannarbor.html)</br>
+### [University Towns in Recessions: Hypothesis Testing](https://nmalinow.github.io/collegetownprices.html)
+### [Best Ann Arbor Commuting Towns: Research Project](/bestcommutesannarbor.html)
 ### [Text Mining Exercise](https://nmalinow.github.io/dataminingproject.md)
 ### [Detriot Parking Ticket Compliance: Machine Learning](https://nmalinow.github.io/detroitticketcompliance.md)
 ### [Social Network Analysis Exercise](https://nmalinow.github.io/socialnetworkanalysis.md)
