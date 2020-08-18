@@ -87,6 +87,7 @@ Generally the total runtime should be less than 10 mins. You should NOT use Neur
 ________________________________________________________________________________
 All of the code below was made into one function blight_model(), per the requirements of the autograder. It is broken into sections for viewing reasons.
 
+### Previewing the data
 Initializing function and importing libraries.
 ```
 def blight_model():
@@ -103,6 +104,7 @@ def blight_model():
     from sklearn.preprocessing import MinMaxScaler
     from sklearn.ensemble import AdaBoostClassifier
 ```
+
 I had to load and preview the datasets to merge them into one to use in our analysis.
 ```
     train = pd.read_csv('train.csv', encoding='ISO-8859-1', dtype={'zip_code': str, 'non_us_str_code': str, 'grafitti_status': str, 'violator_name':str, 
@@ -113,7 +115,11 @@ I had to load and preview the datasets to merge them into one to use in our anal
     coord = address.merge(latlons, how='inner', on='address')
     train = train.merge(coord, how='inner', on='ticket_id')
 ``` 
+<p align="center">
+<img src= "/images/traindata.png" class="center"/>
+</p>
 
+### Dropping values and preprocessing data
 I dropped string values that I was not likely to encode, except violation code and disposition which I was likely to encode.
 ```
     dropstr = [
@@ -142,6 +148,7 @@ I chose a fillna method. (I chose pad after finding it worked with the model bet
     train = train.fillna(method='pad')
 ```
 
+### Data analysis and feature selection
 I graphed the correlation between variables.
 ```
     plt.figure(figsize=(10,10))
@@ -170,6 +177,7 @@ Reviewing the corrrelations, I dropped columns with weak correlations. I kept la
     train.drop(moredrop, axis=1, inplace=True)
 ```
 
+### Preparing data for algorithm testing
 I then formatted the training data.
 ```
     X = train.loc[:, train.columns != 'compliance']
@@ -188,6 +196,7 @@ I split the data into train/test(validation) sets.
     X_train, X_test, y_train, y_test = train_test_split(X,y, random_state=0)
 ```
 
+### Testing algorithms
 I tested different algorithms using the split.
 ```
 from sklearn.svm import SVC
@@ -229,6 +238,7 @@ NB: 0.928232 (0.000098)
 SVM: 0.924237 (0.000035)
 ADAB: 0.933431 (0.000132)
 
+### Tuning hyperparameters
 Since the ADABoostClassifier had the highest accuracy score, I chose this model. I then tuned the hyperparameters with GridSearchCV.
    ```
     from sklearn.ensemble import AdaBoostClassifier
@@ -250,7 +260,8 @@ Since the ADABoostClassifier had the highest accuracy score, I chose this model.
  'learning_rate': 0.5,
  'n_estimators': 50,
  'random_state': None}
-  
+
+### Validating model
 A learning rate of .5 yielded the best results so I used it in my classifier and tested on my validation test from my training data to make sure it was still accurate.
    ```
     clf = AdaBoostClassifier(learning_rate=.25).fit(X_train, y_train)
@@ -262,6 +273,7 @@ A learning rate of .5 yielded the best results so I used it in my classifier and
    ```
    0.932770826342
 
+### Repeat steps with test data
 I then repeated the previous steps with the test data and outputted the required format for the autograder.
 ```
 # Creating test set and merging with geographical data
@@ -283,7 +295,7 @@ I then repeated the previous steps with the test data and outputted the required
 
 # Finalizing with the MinMax Scaler
     X_testsetfinal = scaler.fit_transform(X_testset)
-    
+
 # Calculating probabilities and putting into form specified for autograder
     test_pred = clf.predict_proba(X_testsetfinal)[:,1]
     ans = pd.DataFrame(test_pred,index=X_testset.ticket_id.values, columns=['Probability'])
