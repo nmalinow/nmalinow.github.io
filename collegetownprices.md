@@ -169,7 +169,7 @@ convert_housing_data_to_quarters()
 
 ### Running the T-Test
 
-I created a column "University Town" in the table for identifying college towns since the towns in this table are college towns. Then I left-merged the housing data with the aforementioned towns table to only account for towns with housing data. I then identified the non-university towns by filling the newly merged towns "University Town" column with a value of false.
+I created a column "University Town" in the table for identifying college towns since the towns in this table are college towns. Then I left-merged the housing data with the aforementioned towns table to only account for towns with housing data. I then identified the non-university towns by filling the blanks in newly merged towns in the "University Town" column with a value of false.
 ```
 def run_ttest():
 
@@ -187,7 +187,7 @@ def run_ttest():
     all_towns = housing.merge(univ_towns_table, how='left', on=['State', 'RegionName'])
     all_towns['University Town'] = all_towns['University Town'].replace({np.NaN: False})
     
-    # Calculated the price difference to be used in our t-tes to determine mean price ratio (aka reduced market loss).
+    # Calculated the price difference to be used in our t-test to determine mean price ratio (aka reduced market loss).
     all_towns['Price Difference'] = all_towns[start]/all_towns[bottom]
     
     # Created the two datasets with university and non-university towns to test the hypothesis.
