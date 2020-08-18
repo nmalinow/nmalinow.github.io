@@ -28,9 +28,12 @@ from scipy.stats import ttest_ind
 
 Let's view the list of university towns.
 ```
-df = pd.read_csv('university_towns.txt', header=none)
+df = pd.read_fwf('university_towns.txt')
 df.head()
 ```
+<p align="center">
+<img src= "/images/universitytownsdata.png" class="center"/>
+</p>
 
 Now, let's check out the US Department of Commerce GDP data.
 ```
@@ -39,12 +42,18 @@ GDP['GDP'] = pd.to_numeric(GDP['GDP'])
 
 GDP.head()
 ```
+<p align="center">
+<img src= "/images/gdpdata.png" class="center"/>
+</p>
 
 Finally, let's look at our Zillow housing data.
 ```
 zillow = pd.read_csv("City_Zhvi_AllHomes.csv")
 zillow.head()
 ```
+<p align="center">
+<img src= "/images/zillowdata.png" class="center"/>
+</p>
 
 ### Cleaning the Data
 
@@ -82,6 +91,9 @@ def get_list_of_university_towns():
     
 get_list_of_university_towns()
 ```
+<p align="center">
+<img src= "/images/cleanuniversitytownsdata.png" class="center"/>
+</p>
 
 ### Defining Quarters
 
@@ -166,6 +178,9 @@ def convert_housing_data_to_quarters():
  
 convert_housing_data_to_quarters()
 ```
+<p align="center">
+<img src= "/images/housingdata.png" class="center"/>
+</p>
 
 ### Running the T-Test
 
