@@ -1,7 +1,7 @@
 # Housing Prices in Recessions
 
 ### Hypothesis Testing
-Hypothesis: University towns have their mean housing prices less effected by recessions.
+Hypothesis: University towns have their mean housing prices less affected by recessions.
 
 ### Background
 
