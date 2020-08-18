@@ -18,7 +18,7 @@ You must provide at least two links to available datasets. These could be links 
 
 ### Retrieving the datasets
 
-I began with importing the requred libraries.
+I began with importing the requred libraries and previewed the data in Excel since the files were relatively small.
 ```
 %matplotlib notebook
 import pandas as pd
@@ -27,33 +27,49 @@ import matplotlib as mpl
 import matplotlib.pyplot as plt
 ```
 
-Scraped cities and their distances from Ann Arbor, only focusing on cities within 15 miles.
+I scraped cities and their distances from Ann Arbor, only focusing on cities within 15 miles.
 ```
 city_dist = pd.read_excel('Ann Arbor City Dist.xlsx', usecols= [0,1])
 city_dist.rename(columns={'Town': 'City', 'mi.': 'Miles to AA'}, inplace=True)
 city_dist = city_dist[city_dist['Miles to AA'] < 15]
+city_dist
 ```
+<p align="center">
+<img src= "/images/citydistdata.png" class="center"/>
+</p>
 
-Scraped commute time to Ann Arbor from different cities.
+I scraped commute time to Ann Arbor from different cities.
 ```
 comm_time = pd.read_excel('Mean Commute Time MI Cities.xlsx')
 comm_time.rename(columns={'Value':'Avg Commute Time'}, inplace=True)
+comm_time.head()
 ```
+<p align="center">
+<img src= "/images/commtimedata.png" class="center"/>
+</p>
 
-Scraped average current home values from Zillow for cities near Ann Arbor and the YOY changes.
+I scraped average current home values from Zillow for cities near Ann Arbor and the YOY changes.
 ```
 home_value = pd.read_excel('mi.xls', header=2, usecols=[0,3,6,7])
 home_value.rename(columns={'Region Name':'City', 'Current':'Home Value', 'Year Over Year':'YOY'}, inplace=True)
 home_value.drop([0], inplace=True)
 home_value.reset_index(inplace=True)
 home_value.drop(['index'], axis=1, inplace=True)
+home_value.head()
 ```
+<p align="center">
+<img src= "/images/homevaluedata.png" class="center"/>
+</p>
 
-Merged the 3 data sets on City.
+Then I merged the 3 data sets on City.
 ```
 city_travel = city_dist.merge(comm_time, on='City')
 city_house_info = city_travel.merge(home_value, on='City')
+city_house_info
 ```
+<p align="center">
+<img src= "/images/cityhouseinfodata.png" class="center"/>
+</p>
 
 # Creating the visualization
 First, I created the subplots which I will use for the visualization.
