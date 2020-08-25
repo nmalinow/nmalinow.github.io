@@ -52,6 +52,7 @@ regions = json_extract(data, 'regionCode')
 <p align="center">
 <img src= "/images/awsregions.png" class="center"/>
 </p>
+
 ```
 # Extract Region URL Extensions to list
 region_url = json_extract(data, 'currentVersionUrl')
@@ -59,6 +60,7 @@ region_url = json_extract(data, 'currentVersionUrl')
 <p align="center">
 <img src= "/images/awsurls.png" class="center"/>
 </p>
+
 ```
 # Create a dictionary of paired Region Names and URL Extensions
 region_dict = {'Region':regions, 'URL': region_url}
