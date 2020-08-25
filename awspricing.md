@@ -17,15 +17,15 @@ r = requests.get(aws_url, allow_redirects=True)
 data = r.json()
 ```
 
-# Extracting values of keys from nested JSON
+### Extracting values of keys from nested JSON
 Seeing as the region and URL values I was looking for were nested, I used a function to extract values from any key I needed.
 ```
 def json_extract(obj, key):
-    """Recursively fetch values from nested JSON."""
+    # Recursively fetch values from nested JSON.
     arr = []
 
     def extract(obj, arr, key):
-        """Recursively search for values of key in JSON tree."""
+        # Recursively search for values of key in JSON tree.
         if isinstance(obj, dict):
             for k, v in obj.items():
                 if isinstance(v, (dict, list)):
@@ -60,15 +60,12 @@ region_url_csv = [url.replace('json', 'csv') for url in region_url]
 Now, I had to set up a dataframe to add the data I wanted. The base_url is used in every URL, so the unique URL extensions will be added to it to form the full URL.
 ```
 # Create column list (you can add/remove columns you want)
-
 column_list = ['SKU', 'OfferTermCode', 'RateCode', 'TermType', 'PriceDescription', 'EffectiveDate', 'Unit', 'PricePerUnit', 'Currency', 'LeaseContractLength', 'PurchaseOption', 'OfferingClass', 'Product Family', 'serviceCode', 'Location', 'Location Type', 'Instance Type', 'Current Generation', 'Instance Family', 'vCPU', 'Memory', 'Tenancy', 'Operating System', 'Pre Installed S/W']
 
 # Create blank dataframe with columns from column_list
-
 pricing_list = pd.DataFrame(columns=column_list)
 
 # The base url used for every complete URL
-
 base_url = 'https://pricing.us-east-1.amazonaws.com'
 ```
 At this point I created a loop that will add each CSV file from the URL list to the pricing_list dataframe.
@@ -84,26 +81,22 @@ for url in region_url_csv:
 
 Then, I took our 3 subsets of the dataframe and merged them together to make a smaller file.
 ```
-#Create dataframes from substet of pricing_list dataframe for each pricing type (you can adjust parameters)
-
+# Create dataframes from substet of pricing_list dataframe for each pricing type (you can adjust parameters)
 on_demand = pricing_list[pricing_list['TermType']=='OnDemand']
 one_yr_no_upfront = pricing_list[(pricing_list['TermType']=='Reserved') & (pricing_list['LeaseContractLength']=='1yr') & (pricing_list['PurchaseOption']=='No Upfront') & (pricing_list['OfferingClass']=='standard')]
 three_yr_conv = pricing_list[(pricing_list['TermType']=='Reserved') & (pricing_list['LeaseContractLength']=='3yr') & (pricing_list['PurchaseOption']=='No Upfront') & (pricing_list['OfferingClass']=='convertible')]
 
 # Create final_pricing dataframe by appending the pricing types dataframes
-
 final_pricing = on_demand.append(one_yr_no_upfront.append(three_yr_conv, ignore_index=True), ignore_index=True)
 ```
 
 Lastly, I created and compressed the CSV file into a zip folder.
 ```
 # Name file and compression type
-
 compression_opts = dict(method='zip',
                         archive_name='AWSEC2Pricing.csv')  
 
 # Convert data to CSV and compress to zip file
-
 final_pricing.to_csv('awsec2pricing.zip', index=False,
           compression=compression_opts)  
 ```
