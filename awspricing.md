@@ -16,6 +16,9 @@ aws_url = "https://pricing.us-east-1.amazonaws.com/offers/v1.0/aws/AmazonEC2/cur
 r = requests.get(aws_url, allow_redirects=True)
 data = r.json()
 ```
+<p align="center">
+<img src= "/images/awsregionindex.png" class="center"/>
+</p>
 
 ### Extracting values of keys from nested JSON
 Seeing as the region and URL values I was looking for were nested, I used a function to extract values from any key I needed.
@@ -40,14 +43,23 @@ def json_extract(obj, key):
     values = extract(obj, arr, key)
     return values
 ```
+
 Then I extracted the Region Names and Region URL Extensions to a list, and then a dictionary for the ability to easily sub-query specific regions in the future.
 ```
 # Extract Region Names to list
 regions = json_extract(data, 'regionCode')
-
+```
+<p align="center">
+<img src= "/images/awsregions.png" class="center"/>
+</p>
+```
 # Extract Region URL Extensions to list
 region_url = json_extract(data, 'currentVersionUrl')
-
+```
+<p align="center">
+<img src= "/images/awsurls.png" class="center"/>
+</p>
+```
 # Create a dictionary of paired Region Names and URL Extensions
 region_dict = {'Region':regions, 'URL': region_url}
 ```
@@ -56,6 +68,10 @@ Amazon allows you to use a CSV or JSON file, and since I wanted to use the CSV f
 ```
 region_url_csv = [url.replace('json', 'csv') for url in region_url]
 ```
+<p align="center">
+<img src= "/images/awsurlscsv.png" class="center"/>
+</p>
+
 ### Creating the pricing list
 Now, I had to set up a dataframe to add the data I wanted. The base_url is used in every URL, so the unique URL extensions will be added to it to form the full URL.
 ```
@@ -68,6 +84,7 @@ pricing_list = pd.DataFrame(columns=column_list)
 # The base url used for every complete URL
 base_url = 'https://pricing.us-east-1.amazonaws.com'
 ```
+
 At this point I created a loop that will add each CSV file from the URL list to the pricing_list dataframe.
 ```
 for url in region_url_csv:
@@ -78,6 +95,9 @@ for url in region_url_csv:
     # Append data to pricing_list dataframe
     pricing_list = pricing_list.append(region_price, ignore_index=True)
  ```   
+<p align="center">
+<img src= "/images/awspricinglistdata.png" class="center"/>
+</p>
 
 Then, I took our 3 subsets of the dataframe and merged them together to make a smaller file.
 ```
@@ -89,6 +109,9 @@ three_yr_conv = pricing_list[(pricing_list['TermType']=='Reserved') & (pricing_l
 # Create final_pricing dataframe by appending the pricing types dataframes
 final_pricing = on_demand.append(one_yr_no_upfront.append(three_yr_conv, ignore_index=True), ignore_index=True)
 ```
+<p align="center">
+<img src= "/images/awsfinalpricingdata.png" class="center"/>
+</p>
 
 Lastly, I created and compressed the CSV file into a zip folder.
 ```
