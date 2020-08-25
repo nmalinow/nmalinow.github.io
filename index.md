@@ -2,6 +2,7 @@
 
 
 ## Python
+### [AWS EC2 Pricing: Automated Web Scraping](/awspricing.html)
 ### [University Towns in Recessions: Hypothesis Testing](/collegetownprices.html)
 ### [Best Ann Arbor Commuting Towns: Research Project](/bestcommutesannarbor.html)
 ### [Text Mining Exercise](/dataminingproject.html)
